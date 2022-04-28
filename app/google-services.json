@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "225923336883",
+    "project_id": "findpharmatcc",
+    "storage_bucket": "findpharmatcc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:225923336883:android:9f3776bc457b0e189cbec6",
+        "android_client_info": {
+          "package_name": "com.felipebrand.findpharma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "225923336883-2aueodfeehjj1sg1065rg65v6pmbov1m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6c9aJVE7QjOXtRn-HkFmPRM1ddh-wavM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "225923336883-2aueodfeehjj1sg1065rg65v6pmbov1m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

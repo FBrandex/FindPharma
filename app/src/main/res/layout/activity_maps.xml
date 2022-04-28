@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:map="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".mapas.MapsActivity">
+
+    <fragment
+        android:id="@+id/map_fragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        map:layout_constraintBottom_toTopOf="@+id/seekBar"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintHorizontal_bias="0.0"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="parent"
+        map:layout_constraintVertical_bias="0.0"
+        tools:context=".activity.MapsActivity" />
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/deepPink"
+        android:max="4800"
+        android:padding="16dp"
+        android:paddingStart="32dp"
+        android:progress="0"
+        android:progressTint="@color/white"
+        android:thumbTint="@color/white"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toStartOf="@+id/textSize"
+        map:layout_constraintStart_toStartOf="parent" />
+    <TextView
+        android:id="@+id/textSize"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:background="@color/deepPink"
+        android:gravity="center"
+        android:text="200 m"
+
+    android:textColor="@color/white"
+    android:textSize="20sp"
+    android:textStyle="bold"
+    map:layout_constraintBottom_toBottomOf="parent"
+    map:layout_constraintEnd_toEndOf="parent"
+    map:layout_constraintTop_toTopOf="@+id/seekBar" />
+
+    <ImageButton
+        android:id="@+id/button_search"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/deepPink"
+        android:contentDescription="@string/app_name"
+        android:visibility="visible"
+        map:layout_constraintEnd_toEndOf="@+id/map_fragment"
+        map:layout_constraintTop_toBottomOf="@+id/campo_pesquisa"
+        map:srcCompat="@android:drawable/ic_menu_search" />
+
+    <EditText
+        android:id="@+id/campo_pesquisa"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginTop="4dp"
+        android:background="@color/deepPink"
+        android:ems="10"
+        android:hint="Pesquisar"
+        android:inputType="text"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        map:layout_constraintEnd_toStartOf="@+id/button_search"
+        map:layout_constraintHorizontal_bias="0.0"
+        map:layout_constraintStart_toStartOf="parent"
+        map:layout_constraintTop_toTopOf="@+id/map_fragment" />
+</androidx.constraintlayout.widget.ConstraintLayout>
