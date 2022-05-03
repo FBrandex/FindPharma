@@ -8,12 +8,12 @@ class Farmacia {
     private var Id: String? = null
     private var produto = arrayListOf<Produto>()
 
-    fun getProduto(): List<Produto?>? {
+    fun getProduto(): List<Produto?> {
         return produto
     }
 
     fun setProduto(produto: List<Produto?>?) {
-        this.produto = produto as ArrayList<Produto>
+        (produto as ArrayList<*>).also { this.produto = it as ArrayList<Produto> }
     }
 
 
