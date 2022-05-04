@@ -2,19 +2,24 @@ package com.felipebrand.findpharma.mapas
 
 
 import android.Manifest
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Color
+import android.location.Geocoder
 import android.location.Location
 import android.location.Location.distanceBetween
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.MenuItem
 import android.view.View.INVISIBLE
 import android.widget.*
+import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import com.felipebrand.findpharma.R
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -39,7 +44,8 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     lateinit var databaseRef: DatabaseReference
     private lateinit var marker: Marker
-    lateinit var circle: Circle
+     var circle: Circle? = null
+
     private lateinit var home: LatLng
     private lateinit var buttonSearch: Button
     private var farmas = arrayListOf<Farmacia>()
@@ -57,7 +63,7 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
     lateinit var farmaAux: Farmacia
     lateinit var produtoAux: Produto
     lateinit var markerLocation: LatLng
-
+    private lateinit var locationCallback: LocationCallback
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,7 +125,7 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
                 ).show()
             }
         })
-        Toast.makeText(applicationContext, "Teste", Toast.LENGTH_SHORT).show()
+
 
 
         fun procurarLojas(item: MenuItem): Boolean {
@@ -193,15 +199,16 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
         client?.lastLocation?.addOnSuccessListener(OnSuccessListener {
             fun onSuccess(location: Location) {
                 Log.i("Location", "Location Vazio")
-                val my_loc: LatLng = LatLng(location.latitude, location.longitude)
+                val my_loc = LatLng(location.latitude, location.longitude)
                 home = my_loc
-                if (!fristTime) {
+
+               if (fristTime) {
                     marker =
                         mMap.addMarker(
                             MarkerOptions().position(my_loc).title("Minha Localização")
                         )!!
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(my_loc, zoom))
-                    circle = mMap.addCircle(
+                    this.circle = mMap.addCircle(
                         CircleOptions().center(my_loc).fillColor(Color.argb(20, 0, 255, 255))
                             .strokeWidth(
                                 8F
@@ -232,43 +239,41 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
             LocationSettingsRequest.Builder().addLocationRequest(loc_req)
 
         val setting_cli: SettingsClient = LocationServices.getSettingsClient(this)
-//       setting_cli.checkLocationSettings(builder.build()).addOnSuccessListener(OnSuccessListener() {
-//            fun onSuccess(locationSettingsRequest: LocationSettingsRequest) {
-//           }
-//       }).addOnFailureListener(OnFailureListener(){
-//            fun onFailure(@NonNull e:Exception){
-//                if(e is ResolvableApiException) try {
-//                   val resolvable: ResolvableApiException = e as ResolvableApiException
-//                        resolvable.startResolutionForResult(MapsActivity,10)
-//
-//
-//                }catch (sendIntentException: IntentSender.SendIntentException){
-//
-//                }
-//            }
-//
-//        })
-//
-//
-//
-//
-//        val locationCallback:LocationCallback =
-//        override fun onLocationResult(@NonNull locationResult: LocationResult) {
-//            //super.onLocationResult(locationResult)
+       setting_cli.checkLocationSettings(builder.build()).addOnSuccessListener(OnSuccessListener() {
+            fun onSuccess(locationSettingsRequest: LocationSettingsRequest) {
+           }
+       }).addOnFailureListener(OnFailureListener(){
+            fun onFailure(@NonNull e:Exception){
+                if(e is ResolvableApiException) try {
+                   val resolvable: ResolvableApiException = e as ResolvableApiException
+                        resolvable.startResolutionForResult(this,10)
+
+
+                }catch (sendIntentException: IntentSender.SendIntentException){
+
+                }
+            }
+
+        })
+
+        locationCallback = object:LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
 //                if (locationResult is null) {
+//
 //                    Log.i("LocationResult", "locationResult vazio")
 //                    return
 //                }
-//                for (location:Location  in locationResult.locations) {
-//                if (!Geocoder.isPresent()) {
-//                    return
-//                }
-//            }
-//            }
-//        client?.requestLocationUpdates(loc_req,locationCallback,null)
-//
-}
+                for (location: Location in locationResult.locations) {
+                    if (!Geocoder.isPresent()) {
+                        return
+                    }
+                }
+            }
+        }
+        client?.requestLocationUpdates(loc_req,locationCallback, Looper.myLooper()!!)
 
+}
         override fun onMapReady(googleMap: GoogleMap) {
             try {
                 val success: Boolean =
@@ -304,16 +309,17 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
             seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 var minRadius: Int = 0
                 var zoomOut: Float = 0.0f
-                val m = " m"
+              //  val m = " m"
 
                 override fun onProgressChanged(seekBar: SeekBar, i: Int, b: Boolean) {
                     minRadius = i + 200
-                    zoomOut = zoom - (i / 1500).toFloat()
-                    circle.radius = minRadius.toDouble()
+                    val aux = i/1500
+                    zoomOut = zoom - aux.toFloat() //(i / 1500).toFloat()
+                    circle?.radius = minRadius.toDouble()
                     if (zoomOut > 12)
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(zoomOut))
                     geofenceSize = minRadius.toDouble()
-                    textSize.setText(minRadius) // USAR O "M"
+                    //textSize.setText(minRadius.toInt()) // USAR O "M"
 
                 }
 
@@ -323,11 +329,15 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
                 override fun onStopTrackingTouch(seekBar: SeekBar) {
                 }
             })
-            mMap.setOnMapLongClickListener { latLng: LatLng ->
-                geofenceMarker(latLng)
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-                markerLocation = latLng
-            }
+            mMap.setOnMapLongClickListener (GoogleMap.OnMapLongClickListener(){
+
+                fun onMapLongClick(latLng: LatLng) {
+                    geofenceMarker(latLng)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+                    markerLocation = latLng
+                }
+            })
+
             mMap.setOnMyLocationButtonClickListener {
                 geofenceMarker(home)
                 markerLocation = home
@@ -367,7 +377,7 @@ class MapsActivity : AppCompatActivity(),OnMapReadyCallback {
         }
 
         fun geofenceMarker(latLng: LatLng) {
-            circle.remove()
+            circle?.remove()
             marker.remove()
             if (latLng == home) {
                 marker =

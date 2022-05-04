@@ -25,7 +25,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/deepPink"
-        android:max="4800"
+        android:max="480"
         android:padding="16dp"
         android:paddingStart="32dp"
         android:progress="0"
@@ -34,20 +34,37 @@
         map:layout_constraintBottom_toBottomOf="parent"
         map:layout_constraintEnd_toStartOf="@+id/textSize"
         map:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/textSize"
         android:layout_width="100dp"
         android:layout_height="0dp"
         android:background="@color/deepPink"
         android:gravity="center"
-        android:text="200 m"
+        android:text="200"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintTop_toTopOf="@+id/seekBar"
+        map:layout_constraintVertical_bias="0.0" />
 
-    android:textColor="@color/white"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    map:layout_constraintBottom_toBottomOf="parent"
-    map:layout_constraintEnd_toEndOf="parent"
-    map:layout_constraintTop_toTopOf="@+id/seekBar" />
+    <TextView
+        android:layout_width="29dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="4dp"
+        android:background="@color/deepPink"
+        android:gravity="center"
+        android:text="m"
+        android:textColor="@color/white"
+
+        android:textSize="20sp"
+        android:textStyle="bold"
+        map:layout_constraintBottom_toBottomOf="parent"
+        map:layout_constraintEnd_toEndOf="parent"
+        map:layout_constraintTop_toTopOf="@+id/seekBar"
+        map:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/button_search"
